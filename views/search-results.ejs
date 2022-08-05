@@ -1,0 +1,74 @@
+<%- include("./partials/head.ejs") %> 
+
+  <body>
+    <div class="search-result-body">
+
+      <%- include("./partials/nav.ejs") %>
+
+      <h1 class="search-results-heading">News Results</h1>
+      <section class="news-grid-container">
+        <div class="news-grid">
+          <% let i = 0 %>    <% while(i < news.length){ %>
+          <div class="news-grid-card">
+            <div class="grid-card-img">
+              <img src="<%= news[i].urlToImage %> " alt="" />
+            </div>
+            <div class="grid-card-text">
+              <h2>
+                <a href="<%= news[i].url %> "><%= news[i].title %> </a>
+              </h2>
+              <h3>From <%=news[i].source.name%></h3>
+            </div>
+          </div>
+          <% i=i+1 } %>
+        </div>
+      </section>
+      <div class="pagination">
+        <button id="previous-btn">Previous</button>
+        <h1 id="page-number">1</h1>
+        <button id="next-btn" data-num="<%= news.length %> ">Next</button>
+      </div>
+
+      <%- include("./partials/footer.ejs") %> 
+
+    </div>
+    <script>
+      const prevBtn = document.querySelector("#previous-btn");
+      const nextBtn = document.querySelector("#next-btn");
+      const pageNum = document.querySelector("#page-number");
+      prevBtn.addEventListener("click", (e) => {
+        const queryString = window.location.search;
+        const searchParams = new URLSearchParams(queryString);
+        const curPage = Number(searchParams.get("page"));
+        searchParams.set("page", curPage - 1);
+        const endpoint = `/search?${searchParams.toString()}`;
+        window.location.href = endpoint;
+      });
+      nextBtn.addEventListener("click", (e) => {
+        const queryString = window.location.search;
+        const searchParams = new URLSearchParams(queryString);
+        const curPage = Number(searchParams.get("page"));
+        searchParams.set("page", curPage + 1);
+        const endpoint = `/search?${searchParams.toString()}`;
+        window.location.href = endpoint;
+      });
+      const queryString = window.location.search;
+      const searchParams = new URLSearchParams(queryString);
+      const curPage = searchParams.get("page");
+      pageNum.textContent = curPage;
+
+      if (curPage == 1) {
+        prevBtn.setAttribute("disabled", "disabled");
+        prevBtn.style.cursor = "not-allowed";
+      }
+      if (curPage == 6) {
+        nextBtn.setAttribute("disabled", "disabled");
+        nextBtn.style.cursor = "not-allowed";
+      }
+      if (nextBtn.dataset.num < 16) {
+        nextBtn.setAttribute("disabled", "disabled");
+        nextBtn.style.cursor = "not-allowed";
+      }
+    </script>
+  </body>
+</html>

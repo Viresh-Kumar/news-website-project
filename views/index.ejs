@@ -1,0 +1,79 @@
+<%- include("./partials/head.ejs") %>
+
+  <body>
+
+    <%- include("./partials/nav.ejs") %>
+
+    <section class="cover-container">
+      <div class="cover-img">
+        <img src="<%= news[0].urlToImage %> " alt="" />
+      </div>
+      <div class="cover-title">
+        <h1><a href="<%= news[0].url %> "><%= news[0].title %></a></h1>
+      </div>
+      <div class="cover-content">
+        <p><%= news[0].description %></p>
+      </div>
+    </section>
+    <div class="middle-container" id="search-news">
+      <div class="search-news">
+        <input
+          class="search-bar"
+          id="search-bar"
+          type="text"
+          placeholder="Search Keywords"
+        />
+        <button class="search-btn" id="search-btn">
+          <img src="./img/search-icon.svg" alt="" />
+        </button>
+      </div>
+      <div class="top-three-section">
+        <div class="top-three">
+          <% if(news.length > 0){ %> <% for(var i=1; i<5; i++){ %>
+          <div class="news-card">
+            <div class="card-img">
+              <img src="<%= news[i].urlToImage %> " alt="" />
+              <h1>From <%= news[i].source.name %></h1>
+            </div>
+            <div class="card-text">
+              <h2><a href="<%= news[i].url %> "><%= news[i].title %></a></h2>
+            </div>
+          </div>
+          <% } %> <% } %>
+        </div>
+      </div>
+    </div>
+    <section class="top-six-section">
+      <div class="top-six">
+        <% if(news.length > 0){ %> <% for(var i=5; i<13; i++){ %>
+        <div class="news-card-small">
+          <img src="<%= news[i].urlToImage %> " alt="" />
+          <div class="small-news-title">
+            <h1><a href="<%= news[i].url %> "><%= news[i].title %></a></h1>
+          </div>
+          <div class="small-news-author">
+            <h2>From <%= news[i].source.name %></h2>
+          </div>
+        </div>
+        <% } %> <% } %>
+      </div>
+    </section>
+
+    <%- include("./partials/footer.ejs") %>
+
+    <script>
+      const searchBar = document.querySelector("#search-bar");
+      const searchBtn = document.querySelector("#search-btn");
+      searchBtn.addEventListener("click", (e) => {
+        const q = searchBar.value;
+        if (!q) return;
+        const queryString = window.location.search;
+        const searchParams = new URLSearchParams(queryString);
+        searchParams.set("q", q);
+        searchParams.set("page", 1);
+        const endpoint = `/search?${searchParams.toString()}`;
+        window.location.href = endpoint;
+      });
+    </script>
+  </body>
+</html>
